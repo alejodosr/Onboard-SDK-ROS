@@ -820,6 +820,8 @@ void DJISDKNode::publishVGAStereoImage(Vehicle*            vehicle,
 
 void DJISDKNode::publishFPVCameraImage(CameraRGBImage rgbImg, void* userData)
 {
+  std::cout << "#### Got image\t" << std::endl;
+
   DJISDKNode *node_ptr = (DJISDKNode *)userData;
 
   sensor_msgs::Image img;
