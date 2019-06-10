@@ -83,8 +83,8 @@ DJISDKNode::droneArmCallback(dji_sdk::DroneArmControl::Request&  request,
 
 bool
 DJISDKNode::sdkCtrlAuthorityCallback(
-  dji_sdk::SDKControlAuthority::Request&  request,
-  dji_sdk::SDKControlAuthority::Response& response)
+    dji_sdk::SDKControlAuthority::Request&  request,
+    dji_sdk::SDKControlAuthority::Response& response)
 {
 
   ROS_DEBUG("called sdkCtrlAuthorityCallback");
@@ -123,7 +123,7 @@ DJISDKNode::sdkCtrlAuthorityCallback(
 
 bool
 DJISDKNode::setLocalPosRefCallback(dji_sdk::SetLocalPosRef::Request &request,
-                                     dji_sdk::SetLocalPosRef::Response &response) {
+                                   dji_sdk::SetLocalPosRef::Response &response) {
   printf("Currrent GPS health is %d \n",current_gps_health );
   if (current_gps_health > 3)
   {
@@ -444,6 +444,7 @@ DJISDKNode::setupCameraStreamCallback(dji_sdk::SetupCameraStream::Request&  requ
   ROS_DEBUG("called cameraStreamCallback");
   bool result = false;
 
+
   if(request.cameraType == request.FPV_CAM)
   {
     if(request.start == 1)
@@ -460,7 +461,14 @@ DJISDKNode::setupCameraStreamCallback(dji_sdk::SetupCameraStream::Request&  requ
   {
     if(request.start == 1)
     {
-      result = vehicle->advancedSensing->startMainCameraStream(&publishMainCameraImage, this);
+      try{
+        result = vehicle->advancedSensing->startMainCameraStream(&publishMainCameraImage, this);
+        std::cout << "NODE INFO: Camera service called" << std::endl;
+      }
+      catch(...){
+        std::cout << "NODE INFO: Error in request" << std::endl;
+        result = false;
+      }
     }
     else
     {

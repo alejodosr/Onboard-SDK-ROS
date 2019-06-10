@@ -820,8 +820,6 @@ void DJISDKNode::publishVGAStereoImage(Vehicle*            vehicle,
 
 void DJISDKNode::publishFPVCameraImage(CameraRGBImage rgbImg, void* userData)
 {
-  std::cout << "#### Got image\t" << std::endl;
-
   DJISDKNode *node_ptr = (DJISDKNode *)userData;
 
   sensor_msgs::Image img;
@@ -838,17 +836,25 @@ void DJISDKNode::publishFPVCameraImage(CameraRGBImage rgbImg, void* userData)
 
 void DJISDKNode::publishMainCameraImage(CameraRGBImage rgbImg, void* userData)
 {
-  DJISDKNode *node_ptr = (DJISDKNode *)userData;
+  try{
 
-  sensor_msgs::Image img;
-  img.height = rgbImg.height;
-  img.width = rgbImg.width;
-  img.step = rgbImg.width*3;
-  img.encoding = "rgb8";
-  img.data = rgbImg.rawData;
+    std::cout << "NODE INFO: Got image" << std::endl;
 
-  img.header.stamp = ros::Time::now();
-  img.header.frame_id = "MAIN_CAMERA";
-  node_ptr->main_camera_stream_publisher.publish(img);
+    DJISDKNode *node_ptr = (DJISDKNode *)userData;
+
+    sensor_msgs::Image img;
+    img.height = rgbImg.height;
+    img.width = rgbImg.width;
+    img.step = rgbImg.width*3;
+    img.encoding = "rgb8";
+    img.data = rgbImg.rawData;
+
+    img.header.stamp = ros::Time::now();
+    img.header.frame_id = "MAIN_CAMERA";
+    node_ptr->main_camera_stream_publisher.publish(img);
+  }
+  catch(...){
+    std::cout << "NODE INFO: Error in retrieving camera image" << std::endl;
+  }
 }
 #endif // ADVANCED_SENSING
